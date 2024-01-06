@@ -49,27 +49,7 @@ public class CardDeck : MonoBehaviour
     /// </summary>
     public void PullCard(Vector3 spawnPosition)
     {
-    }
 
-    /// <summary>
-    /// Deletes a Card from the deck
-    /// </summary>
-    /// <param name="card"></param>
-    public void RemoveCard(GameObject card)
-    {
-        deck.Remove(card);
-        Destroy(card);
-    }
-
-    /// <summary>
-    /// Deletes a Card from the deck
-    /// </summary>
-    /// <param name="index"></param>
-    public void RemoveCard(int index)
-    {
-        GameObject card = deck[index];
-        deck.RemoveAt(index);
-        Destroy(card);
     }
 
     /// <summary>
