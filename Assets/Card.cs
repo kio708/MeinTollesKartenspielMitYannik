@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Card
+public class Card : MonoBehaviour
 {
     public enum Suit
     {
+        None,
         Spade,
         Heart,
         Club,
@@ -14,6 +15,7 @@ public class Card
 
     public enum Value
     {
+        None,
         Ace = 1,
         One = 1,
         Two,
@@ -30,12 +32,12 @@ public class Card
         King
     }
 
-    public readonly Suit cardSuit;
-    public readonly Value value;
+    public Suit suit;
+    public Value value;
 
     public Card(Suit suit, Value value)
     {
-        cardSuit = suit;
+        this.suit = suit;
         this.value = value;
     }
 }
