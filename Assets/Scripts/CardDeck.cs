@@ -1,17 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CardDeck : MonoBehaviour
 {
+    public static CardDeck Instance { get; private set; }
+
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] private GameObject cardDeckParent;
-    
+    [SerializeField] private string spritePath;
+
     private List<GameObject> deck = new List<GameObject>();
     private List<GameObject> discard = new List<GameObject>();
 
     private void Awake()
     {
+        Instance = this;
+
         //Generates a default deck of cards.
         //A total of 52 cards is generated, 13 of each suit.
         for (int suit = 1; suit <= 4; suit++)
@@ -25,13 +31,9 @@ public class CardDeck : MonoBehaviour
                 cardObject.name = card.GetComponent<Card>().value + " of " + card.GetComponent<Card>().suit;
                 cardObject.SetActive(false);
                 deck.Add(cardObject);
-
             }
         }
-    }
 
-    private void Start()
-    {
         Shuffle();
     }
 
@@ -45,10 +47,21 @@ public class CardDeck : MonoBehaviour
     }
 
     /// <summary>
-    /// Pull the first card from the deck
+    /// Pulls the first card from the deck
     /// </summary>
-    public void PullCard(Vector3 spawnPosition)
+    /// <returns>A reference to this card. The gameobject itself is not activated yet.</returns>
+    public Card PullCard()
     {
+        GameObject cardGO = deck[0];
+        Card card = cardGO.GetComponent<Card>();
+        deck.RemoveAt(0);
+        int index = (((int)card.suit - 1) * 15) + (int)card.value - 1;
+        string name = spritePath + "_" + index;
+
+        Sprite[] sprites = Resources.LoadAll<Sprite>(spritePath);
+        card.GetComponent<SpriteRenderer>().sprite = sprites.Where(s => s.name == name).FirstOrDefault();
+
+        return card;
     }
 
     /// <summary>
@@ -86,15 +99,18 @@ public class CardDeck : MonoBehaviour
     /// </summary>
     public void Shuffle()
     {
-        for (int i = 0; i < deck.Count; i++) 
+        List<int> indices = new List<int>();
+        for (int i = 0; i < deck.Count; i++)
+            indices.Add(i);
+
+        while(indices.Count > 0)
         {
-            GameObject card = deck[i];
-            deck.RemoveAt(i);
-            deck.Insert(Random.Range(0, deck.Count - 1), card);
-        }
-        foreach (GameObject card in deck)
-        {
-            Debug.Log(card.GetComponent<Card>().suit + " " + card.GetComponent<Card>().value);
+            int index = indices[Random.Range(0, indices.Count)];
+            indices.Remove(index);
+            
+            GameObject card = deck[index];
+            deck.RemoveAt(index);
+            deck.Add(card);
         }
     }
 
@@ -107,6 +123,6 @@ public class CardDeck : MonoBehaviour
         {
             AddCard(card);
         }
-        discard = new List<GameObject>();
+        discard.Clear();
     }
 }

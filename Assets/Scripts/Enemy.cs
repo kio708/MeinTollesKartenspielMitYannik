@@ -48,7 +48,12 @@ public class Enemy : Entity
         return UnityEngine.Random.Range(1, 7);
     }
 
-    public override IEnumerator StartTurn()
+    public override void StartTurn()
+    {
+        StartCoroutine(Turning());
+    }
+
+    private IEnumerator Turning()
     {
         yield return new WaitForSeconds(UnityEngine.Random.Range(2, 4));
 
@@ -56,6 +61,6 @@ public class Enemy : Entity
         GameManager.Instance.players[player].TakeDamage(attack);
 
         yield return new WaitForSeconds(0.5f);
-        GameManager.Instance.activeTurns.Remove(this);
+        GameManager.Instance.EndTurn();
     }
 }

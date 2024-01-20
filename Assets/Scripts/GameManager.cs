@@ -8,16 +8,12 @@ public class GameManager : MonoBehaviour
 
     public List<Enemy> enemies;
     public List<Player> players;
-    public Dictionary<Entity, Coroutine> activeTurns = new();
+    private int missingClosedTurns;
 
     private Team turningTeam;
 
     private void Awake()
     {
-        if(Instance != null && Instance != this)
-        {
-            throw new System.Exception();
-        }
         Instance = this;
 
         turningTeam = Team.Enemy;
@@ -29,11 +25,11 @@ public class GameManager : MonoBehaviour
         throw new System.NotImplementedException();
     }
 
-    public void EndTurn(Entity entity)
+    public void EndTurn()
     {
-        activeTurns.Remove(entity);
+        missingClosedTurns--;
 
-        if (activeTurns.Count == 0)
+        if (missingClosedTurns == 0)
         { ChangeActiveTeam(); }
     }
 
@@ -41,15 +37,22 @@ public class GameManager : MonoBehaviour
     {
         if (turningTeam == Team.Player)
         {
+            Debug.Log("Players finished;");
             turningTeam = Team.Enemy;
             foreach (Enemy enemy in enemies)
-                activeTurns[enemy] = StartCoroutine(enemy.StartTurn());
+            {
+                enemy.StartTurn();
+                missingClosedTurns++;
+            }
         }
         else if(turningTeam == Team.Enemy)
         {
             turningTeam = Team.Player;
-            foreach(Player player in players)
-                activeTurns[player] = StartCoroutine(player.StartTurn());
+            foreach (Player player in players)
+            {
+                player.StartTurn();
+                missingClosedTurns++;
+            }
         }
     }
 }

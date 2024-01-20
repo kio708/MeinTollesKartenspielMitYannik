@@ -25,5 +25,5 @@ public abstract class Entity : MonoBehaviour
     }
 
     public abstract void Die();
-    public abstract IEnumerator StartTurn();
+    public abstract void StartTurn();
 }
