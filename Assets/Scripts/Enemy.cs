@@ -1,13 +1,42 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class Enemy : Entity
 {
+    [Serializable]
+    public struct Sprite
+    {
+        public UnityEngine.Sprite sprite;
+        public int probibilityWeight;
+    }
+
     private int attack;
 
     public event Action onDeath;
+
+    [SerializeField] private Sprite[] sprites;
+
+    private void Awake()
+    {
+        int sum = 0;
+        foreach(Sprite s in sprites) { sum += s.probibilityWeight; }
+        int num = UnityEngine.Random.Range(0, sum);
+        sum = 0;
+        foreach(Sprite s in sprites)
+        {
+            sum += s.probibilityWeight;
+            if(num < sum)
+            {
+                GetComponent<SpriteRenderer>().sprite = s.sprite;
+                break;
+            }
+        }
+
+        RoleStats();
+    }
 
     public override void Die()
     {

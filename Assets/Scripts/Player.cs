@@ -37,7 +37,6 @@ public class Player : Entity
             card.transform.SetParent(cardHolders[holder].transform, false);
             card.gameObject.SetActive(true);
             cards.Add(card);
-
         }
 
         StartCoroutine(WaitForChosenCard());
