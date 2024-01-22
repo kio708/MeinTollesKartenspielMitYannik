@@ -13,7 +13,9 @@ public abstract class Entity : MonoBehaviour
     public void TakeDamage(int damage)
     {
         Lives -= damage;
-        
+
+        Debug.Log(name + $" has taken {damage} damge");
+
         if (Lives <= 0)
             Die();
     }

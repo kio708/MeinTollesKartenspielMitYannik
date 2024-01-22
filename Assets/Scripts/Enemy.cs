@@ -13,9 +13,12 @@ public class Enemy : Entity
         public int probibilityWeight;
     }
 
-    private int attack;
+    public static Enemy lastlySelectedEnemy = null;
 
     public event Action onDeath;
+
+    private bool isClicked = false;
+    private int attack;
 
     [SerializeField] private Sprite[] sprites;
 
@@ -36,6 +39,25 @@ public class Enemy : Entity
         }
 
         RoleStats();
+    }
+
+    private void OnMouseDown()
+    {
+        isClicked = true;
+    }
+
+    private void OnMouseExit()
+    {
+        isClicked = false;
+    }
+
+    private void OnMouseUp()
+    {
+        if(isClicked && lastlySelectedEnemy == null)
+        {
+            lastlySelectedEnemy = this;
+        }
+        isClicked = false;
     }
 
     public override void Die()

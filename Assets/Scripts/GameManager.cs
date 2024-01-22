@@ -58,6 +58,16 @@ public class GameManager : MonoBehaviour
         players[1].chosenCard = null;
         Effect[] effects = EvaluatePlayerCards(card1, card2);
 
+
+        foreach (Effect effect in effects)
+        {
+            yield return new WaitForSeconds(0.5f);
+            if (effect.isHealing)
+                effect.entity.HealLives(effect.value);
+            else
+                effect.entity.TakeDamage(effect.value);
+        }
+
         turningTeam = Team.Enemy;
         foreach (Enemy enemy in enemies)
         {
@@ -107,6 +117,19 @@ public class GameManager : MonoBehaviour
                     effects.Add(new Effect(true, Mathf.CeilToInt((int)card2.value * 0.5f), player));
                 }
             }
+        }
+        else
+        {
+            if (card1.suit == Card.Suit.Heart)
+                effects.Add(new Effect(true, Mathf.CeilToInt((int)card1.value * 0.5f), Player.lastlySelectedPlayer));
+            else
+                effects.Add(new Effect(false, (int)card1.value, Enemy.lastlySelectedEnemy));
+
+
+            if (card2.suit == Card.Suit.Heart)
+                effects.Add(new Effect(true, Mathf.CeilToInt((int)card2.value * 0.5f), Player.lastlySelectedPlayer));
+            else
+                effects.Add(new Effect(false, (int)card2.value, Enemy.lastlySelectedEnemy));
         }
 
         return effects.ToArray();

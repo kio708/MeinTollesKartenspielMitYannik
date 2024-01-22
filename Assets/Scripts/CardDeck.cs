@@ -94,6 +94,7 @@ public class CardDeck : MonoBehaviour
         deck.Add(card);
     }
 
+
     /// <summary>
     /// Shuffle all cards in the deck
     /// </summary>
@@ -107,7 +108,8 @@ public class CardDeck : MonoBehaviour
         {
             int index = indices[Random.Range(0, indices.Count)];
             indices.Remove(index);
-            
+            Debug.Log(index);
+
             GameObject card = deck[index];
             deck.RemoveAt(index);
             deck.Add(card);

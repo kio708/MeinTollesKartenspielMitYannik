@@ -12,6 +12,29 @@ public class Player : Entity
     [HideInInspector] public Card chosenCard;
     public event Action onDeath;
 
+    public static Player lastlySelectedPlayer;
+
+    private bool isClicked = false;
+
+    private void OnMouseDown()
+    {
+        isClicked = true;
+    }
+
+    private void OnMouseExit()
+    {
+        isClicked = false;
+    }
+
+    private void OnMouseUp()
+    {
+        if (isClicked && lastlySelectedPlayer == null)
+        {
+            lastlySelectedPlayer = this;
+        }
+        isClicked = false;
+    }
+
     public override void Die()
     {
         onDeath?.Invoke();
@@ -39,10 +62,10 @@ public class Player : Entity
             cards.Add(card);
         }
 
-        StartCoroutine(WaitForChosenCard());
+        StartCoroutine(WaitForPlayerTurnEnd());
     }
 
-    private IEnumerator WaitForChosenCard()
+    private IEnumerator WaitForPlayerTurnEnd()
     {
         foreach(Card card in cards)
         {
@@ -56,6 +79,16 @@ public class Player : Entity
         {
             yield return null;
         }
+
+        //Highlight chosen card here
+        lastlySelectedPlayer = null;
+        Enemy.lastlySelectedEnemy = null;
+
+        if (chosenCard.suit == Card.Suit.Heart)
+            while (lastlySelectedPlayer == null) yield return null;
+        else
+            while (Enemy.lastlySelectedEnemy == null) yield return null;
+
 
         cards.Remove(chosenCard);
 
