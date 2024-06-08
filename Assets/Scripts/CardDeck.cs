@@ -64,8 +64,6 @@ public class CardDeck : MonoBehaviour
         return card;
     }
 
-    }
-
     /// <summary>
     /// Add a Card to the deck
     /// </summary>
