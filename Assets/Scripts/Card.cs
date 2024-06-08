@@ -7,10 +7,10 @@ public class Card : MonoBehaviour
     public enum Suit
     {
         None,
+        Club,
+        Diamond,
         Spade,
         Heart,
-        Club,
-        Diamond
     }
 
     public enum Value
